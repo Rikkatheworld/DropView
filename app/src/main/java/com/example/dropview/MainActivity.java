@@ -13,7 +13,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//wowowowowo
+//wowowowowo111
         final DropView drop = findViewById(R.id.dropview);
         drop.start();
         ValueAnimator valueAnimator = ValueAnimator.ofInt(0, 9);
