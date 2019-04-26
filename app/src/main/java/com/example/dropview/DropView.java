@@ -1,5 +1,6 @@
 package com.example.dropview;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -39,13 +40,14 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     //动效持续时间 2000
     private long mDuration;
     //中间字体的间隔 0%
-    private String text;
+    private int digit;
     //起始坐标
     private int x;
     private int y;
     //默认宽高
     int mWidth = 500;
     int mHeight = 500;
+    private int olddigit;
 
     public DropView(Context context) {
         this(context, null);
@@ -74,8 +76,8 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
             int speed = typedArray.getInt(R.styleable.DropView_speed, 600);
             mSpeed = speed;
 
-            String mtext = typedArray.getString(R.styleable.DropView_text);
-            text = mtext;
+//            String mtext = typedArray.getString(R.styleable.DropView_text);
+//            text = mtext;
 
             int stroke_color = typedArray.getColor(R.styleable.DropView_stroke_color, Color.WHITE);
             mPaint4.setColor(stroke_color);
@@ -123,7 +125,7 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
 
         mSpeed = 600;
         mDuration = 2000;
-        text = "0%";
+        digit = 0;
     }
 
     //支持wrap_content
@@ -177,15 +179,22 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
+    public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        Log.e("xxxx1", x + " " + y);
-        Log.e("radius1", radius + "");
-        Log.e("textsize1", "" + mPaint3.getTextSize());
-        Log.e("MaxRadius1", mMaxRadius + "");
 
-        int resId = canvas.saveLayer(0, 0, x * 2, y * 2, mPaint3, Canvas.ALL_SAVE_FLAG);
-        canvas.drawText(text, x, y + (mPaint3.getTextSize() / 2 - 10), mPaint3);
+//        int resId = canvas.saveLayer(0, 0, x * 2, y * 2, mPaint3, Canvas.ALL_SAVE_FLAG);
+//        canvas.drawText(digit + "%", x, y + (mPaint3.getTextSize() / 2 - 10), mPaint3);
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(olddigit, digit);
+        valueAnimator.setDuration(500);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int i = (int) animation.getAnimatedValue();
+                int resId = canvas.saveLayer(0, 0, x * 2, y * 2, mPaint3, Canvas.ALL_SAVE_FLAG);
+                canvas.drawText(i + 1 + "%", x, y + (mPaint3.getTextSize() / 2 - 10), mPaint3);
+            }
+        });
+        valueAnimator.start();
 
         canvas.drawCircle(x, y, radius, mPaint2);
 
@@ -272,12 +281,13 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
         this.mDuration = mDuration;
     }
 
-    public String getText() {
-        return text;
+    public int getText() {
+        return digit;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setText(int digit) {
+        olddigit = this.digit;
+        this.digit = digit;
     }
 
     public int getx() {
