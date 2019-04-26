@@ -48,6 +48,7 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     int mWidth = 500;
     int mHeight = 500;
     private int olddigit;
+    private int progress;
 
     public DropView(Context context) {
         this(context, null);
@@ -101,6 +102,7 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
         mPaint1.setStrokeWidth(3);
         mPaint1.setColor(0xFF0288D1);
         mPaint1.setAntiAlias(true);
+        mPaint1.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
 
         mPaint2 = new Paint();
         mPaint2.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -178,31 +180,22 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     @Override
     public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-
+        canvas.saveLayer(0, 0, x * 2, y * 2, mPaint3, Canvas.ALL_SAVE_FLAG);
+        canvas.drawText(progress + "%", x, y + (mPaint3.getTextSize() / 2 - 10), mPaint3);
 //        int resId = canvas.saveLayer(0, 0, x * 2, y * 2, mPaint3, Canvas.ALL_SAVE_FLAG);
 //        canvas.drawText(digit + "%", x, y + (mPaint3.getTextSize() / 2 - 10), mPaint3);
-        ValueAnimator valueAnimator = ValueAnimator.ofInt(olddigit, digit);
-        valueAnimator.setDuration(500);
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int i = (int) animation.getAnimatedValue();
-                int resId = canvas.saveLayer(0, 0, x * 2, y * 2, mPaint3, Canvas.ALL_SAVE_FLAG);
-                canvas.drawText(i + 1 + "%", x, y + (mPaint3.getTextSize() / 2 - 10), mPaint3);
-            }
-        });
-        valueAnimator.start();
+
 
         canvas.drawCircle(x, y, radius, mPaint2);
 
         canvas.drawCircle(x, y, radius, mPaint4);
+
 
         Iterator<Circle> iterator = circles.iterator();
         while (iterator.hasNext()) {
             Circle circle = iterator.next();
             if (System.currentTimeMillis() - circle.mCreateTime < mDuration) {
                 mPaint1.setAlpha(circle.getAlpha());
-                mPaint1.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.DST_OVER));
                 canvas.drawCircle(x, y, circle.getCurrentRadius(), mPaint1);
             } else {
                 iterator.remove();
@@ -285,6 +278,16 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     public void setText(int digit) {
         olddigit = this.digit;
         this.digit = digit;
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(olddigit, digit);
+        valueAnimator.setDuration(500);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                progress = (int) animation.getAnimatedValue();
+                invalidate();
+            }
+        });
+        valueAnimator.start();
     }
 
     public int getx() {
