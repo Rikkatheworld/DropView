@@ -8,7 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <declare-styleable name="DropImageView">
+    <declare-styleable name="DropView">
         <attr name="duration" format="integer"/>
         <attr name="speed" format="integer"/>
         <attr name="radius" format="integer"/>

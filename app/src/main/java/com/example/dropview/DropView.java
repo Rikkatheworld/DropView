@@ -43,6 +43,9 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     //起始坐标
     private int x;
     private int y;
+    //默认宽高
+    int mWidth = 500;
+    int mHeight = 500;
 
     public DropView(Context context) {
         this(context, null);
@@ -63,30 +66,30 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
     }
 
     private void initTypedArray(Context context, AttributeSet attrs) {
-        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DropImageView);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DropView);
         if (typedArray != null) {
-            int duration = typedArray.getInt(R.styleable.DropImageView_duration, 2000);
+            int duration = typedArray.getInt(R.styleable.DropView_duration, 2000);
             mDuration = duration;
 
-            int speed = typedArray.getInt(R.styleable.DropImageView_speed, 600);
+            int speed = typedArray.getInt(R.styleable.DropView_speed, 600);
             mSpeed = speed;
 
-            String mtext = typedArray.getString(R.styleable.DropImageView_text);
+            String mtext = typedArray.getString(R.styleable.DropView_text);
             text = mtext;
 
-            int stroke_color = typedArray.getColor(R.styleable.DropImageView_stroke_color, Color.WHITE);
+            int stroke_color = typedArray.getColor(R.styleable.DropView_stroke_color, Color.WHITE);
             mPaint4.setColor(stroke_color);
 
-            int wave_color = typedArray.getColor(R.styleable.DropImageView_wave_color, 0xFF008577);
+            int wave_color = typedArray.getColor(R.styleable.DropView_wave_color, 0xFF008577);
             mPaint1.setColor(wave_color);
 
-            int circle_color = typedArray.getColor(R.styleable.DropImageView_circle_color, Color.WHITE);
+            int circle_color = typedArray.getColor(R.styleable.DropView_circle_color, Color.WHITE);
             mPaint2.setColor(circle_color);
 
-            int wave_radius = typedArray.getInt(R.styleable.DropImageView_wave_radius, 500);
+            int wave_radius = typedArray.getInt(R.styleable.DropView_wave_radius, 500);
             mMaxRadius = wave_radius;
 
-            int mradius = typedArray.getInt(R.styleable.DropImageView_radius, 250);
+            int mradius = typedArray.getInt(R.styleable.DropView_radius, 250);
             radius = mradius;
 
             typedArray.recycle();
@@ -134,53 +137,43 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        // 设置wrap_content的默认宽 / 高值
-        int mWidth = 500;
-        int mHeight = 500;
 
-        if (widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.UNSPECIFIED) {
-            widthSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    mWidth,
-                    getContext().getResources()
-                            .getDisplayMetrics());
-            widthSize += getPaddingLeft() + getPaddingRight();
-        }
-        if (heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED) {
-            heightSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    mHeight,
-                    getContext().getResources()
-                            .getDisplayMetrics());
-            heightSize += getPaddingLeft() + getPaddingRight();
-        }
+//        if (widthMode == MeasureSpec.AT_MOST || widthMode == MeasureSpec.UNSPECIFIED) {
+//            widthSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+//                    mWidth,
+//                    getContext().getResources()
+//                            .getDisplayMetrics());
+//            widthSize += getPaddingLeft() + getPaddingRight();
+//        }
+//        if (heightMode == MeasureSpec.AT_MOST || heightMode == MeasureSpec.UNSPECIFIED) {
+//            heightSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_PX,
+//                    mHeight,
+//                    getContext().getResources()
+//                            .getDisplayMetrics());
+//            heightSize += getPaddingTop() + getPaddingBottom();
+//        }
         if (widthSize < heightSize) {
             heightSize = widthSize;
         } else {
             widthSize = heightSize;
         }
+        Log.e("width", widthSize + "");
+        Log.e("height", heightSize + "");
         setMeasuredDimension(widthSize, heightSize);
 
-        // 当布局参数设置为wrap_content时，设置默认值
-//        if (getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT && getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-//
-//            setMeasuredDimension(mWidth, mHeight);
-//            // 宽 / 高任意一个布局参数为 wrap_content时，都设置默认值
-//        } else if (getLayoutParams().width == ViewGroup.LayoutParams.WRAP_CONTENT) {
-//            setMeasuredDimension(mWidth, heightSize);
-//        } else if (getLayoutParams().height == ViewGroup.LayoutParams.WRAP_CONTENT) {
-//            setMeasuredDimension(widthSize, mHeight);
-//        }
-        x = widthSize / 2;
-        y = heightSize / 2;
-        Log.e("xxxx", x + " " + y);
-        Log.e("radius", radius + "");
-        Log.e("textsize", "" + mPaint3.getTextSize());
-        Log.e("MaxRadius", mMaxRadius + "");
-        if (radius > x) {
-            radius = x;
+
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        x = w / 2;
+        y = h / 2;
+        if (mMaxRadius > x) {
+            mMaxRadius = x;
         }
-//        radius = getMeasuredWidth() / 2 / 3;
+        radius = mMaxRadius / 2;
         mPaint3.setTextSize(radius / 2);
-//        mMaxRadius = 2 * radius;
     }
 
     @Override
