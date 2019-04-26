@@ -1,0 +1,21 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <declare-styleable name="DropImageView">
+        <attr name="duration" format="integer"/>
+        <attr name="speed" format="integer"/>
+        <attr name="radius" format="integer"/>
+        <attr name="wave_radius" format="integer"/>
+        <attr name="text" format="string"/>
+        <attr name="stroke_color" format="color"/>
+        <attr name="wave_color" format="color"/>
+        <attr name="circle_color" format="color"/>
+    </declare-styleable>
+</resources>
