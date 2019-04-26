@@ -76,9 +76,6 @@ public class DropView extends android.support.v7.widget.AppCompatImageView {
             int speed = typedArray.getInt(R.styleable.DropView_speed, 600);
             mSpeed = speed;
 
-//            String mtext = typedArray.getString(R.styleable.DropView_text);
-//            text = mtext;
-
             int stroke_color = typedArray.getColor(R.styleable.DropView_stroke_color, Color.WHITE);
             mPaint4.setColor(stroke_color);
 

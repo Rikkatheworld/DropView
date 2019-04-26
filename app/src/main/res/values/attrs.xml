@@ -5,7 +5,6 @@
         <attr name="speed" format="integer"/>
         <attr name="radius" format="integer"/>
         <attr name="wave_radius" format="integer"/>
-        <attr name="text" format="string"/>
         <attr name="stroke_color" format="color"/>
         <attr name="wave_color" format="color"/>
         <attr name="circle_color" format="color"/>
